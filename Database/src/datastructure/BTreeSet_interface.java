@@ -4,8 +4,11 @@ import java.util.*;
 public interface BTreeSet_interface {
 	//数据库中的一个表对应一个B树集，所有对数据的增删查改操作皆以此作为基本接口
 	public ArrayList<String> showAllColumn();               //返回由列名组成的ArrayList
+	public ArrayList<String> showAllsource();               //返回各个列名对应的源数据表名
 	public String showColumn(int column);                   //显示对应列数的列名,若column不合法则返回null
 	public int getColumn(String column);                    //显示列名column对应的列数,若column不存在则返回null
+	public String showSource(int column);                   //显示对应列数的源数据表名
+	public String showSource(String column);                //显示对应列名的源数据表名
 	public int getCount();                                  //显示当前的B树中的节点数目
 	
 	//这一部分为对数据字典的操作
