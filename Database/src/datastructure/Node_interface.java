@@ -5,6 +5,7 @@ public interface Node_interface {
 	public int getIndex();                                  //返回当前节点的索引值
 	public boolean resetIndex(int index);                   //重置当前节点的索引值,成功则返回true,否则返回false
 	public int next();                                      //返回下一个节点的索引值
+	public Node_interface nextNode();                       //返回下一个节点
 	
 	public Object getValues(String column);                 //以Object对象形式返回列属性值,参数为String类型的类名
 	public Object getValues(int column);                    //以Object对象形式返回属性列值,参数为整数类型的列数
