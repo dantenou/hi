@@ -28,11 +28,8 @@ public class BTreeSet implements BTreeSet_interface{
 		return 0;
 	}
 
-	@Override
-	public boolean addColumn(String column_name) {
-		// TODO 自动生成的方法存根
-		return false;
-	}
+	
+	
 
 	@Override
 	public boolean renameColumn(String newName, int column) {
@@ -92,6 +89,12 @@ public class BTreeSet implements BTreeSet_interface{
 	public String showSource(String column) {
 		// TODO Auto-generated method stub
 		return null;
+	}
+
+	@Override
+	public boolean addColumn(String column_name, String source_name) {
+		// TODO Auto-generated method stub
+		return false;
 	}
 	
 }

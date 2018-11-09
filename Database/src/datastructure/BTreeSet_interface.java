@@ -12,7 +12,7 @@ public interface BTreeSet_interface {
 	public int getCount();                                  //显示当前的B树中的节点数目
 	
 	//这一部分为对数据字典的操作
-	public boolean addColumn(String column_name);           //添加一个新的列名
+	public boolean addColumn(String column_name,String source_name);           //添加一个新的列名
 	public boolean renameColumn(String newName,int column); //修改列名
 	public boolean removeColumn(int column);                //移除对应列数的列名,若column不合法则返回false,用于投影操作
 	
