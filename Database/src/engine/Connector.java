@@ -1,11 +1,9 @@
 package engine;
 import datastructure.BTreeSet_interface;
-import engine_interface.*;
-
 import java.util.ArrayList;
 
 import datastructure.*;
-public class Connector implements Connect{
+public class Connector implements engine_interface.Connect{
 
 	@Override
 	public BTreeSet_interface cartesian(BTreeSet_interface bTreeSet1, BTreeSet_interface bTreeSet2) {//笛卡尔积
@@ -180,11 +178,13 @@ public class Connector implements Connect{
 		}
 		
 		int i=0,j=0;
+		i=bTreeSet1.first();
+		j=bTreeSet2.first();
 		la:while(true) {
-			ArrayList<Object> node_value=new ArrayList<Object>();
+			ArrayList<Object> node_value=new ArrayList<Object>();			
 			Node_interface node1=bTreeSet1.findNode(i);
 			if(node1!=null) {				
-				while(true) {
+				while(true) {					
 					Node_interface node2=bTreeSet2.findNode(j);
 					if(node2!=null) {
 						int common_count=0;
@@ -194,12 +194,12 @@ public class Connector implements Connect{
 								}
 							}
 						if(common_count==column_common.size()) {
-							j=0;
-							i++;
+							j=bTreeSet2.first();
+							i=node1.next();
 							continue la;
 						}
 						else {
-							j++;
+							j=node2.next();
 							continue;
 						}
 					}
@@ -211,8 +211,8 @@ public class Connector implements Connect{
 								node_value.add(null);
 						}
 						node_left.add(node_value);
-						i++;
-						j=0;
+						i=node1.next();
+						j=bTreeSet2.first();
 						break;//外循环加一，内循环清零，break内循环
 					}
 				}
@@ -222,6 +222,8 @@ public class Connector implements Connect{
 				break;
 			}
 		}
+		i=bTreeSet2.first();
+		j=bTreeSet1.first();
 		la:while(true) {
 			ArrayList<Object> node_value=new ArrayList<Object>();
 			Node_interface node1=bTreeSet2.findNode(i);
@@ -236,12 +238,12 @@ public class Connector implements Connect{
 								}
 							}
 						if(common_count==column_common.size()) {
-							j=0;
-							i++;
+							j=bTreeSet1.first();
+							i=node1.next();
 							continue la;
 						}
 						else {
-							j++;
+							j=node2.next();
 							continue;
 						}
 					}
@@ -254,7 +256,7 @@ public class Connector implements Connect{
 							}							
 						}
 						node_right.add(node_value);
-						i++;
+						i=node1.next();
 						break;
 					}
 				}
