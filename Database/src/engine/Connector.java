@@ -18,7 +18,7 @@ public class Connector implements engine_interface.Connect{
 		}
 		for(int i=0;i<allColumn_bTreeSet2.size();i++) {
 			bt.addColumn(allColumn_bTreeSet2.get(i),allColumn_bTreeSet2_source.get(i));
-		}
+		}//新树添加列名
 		int m=0;
 		while(true) {
 			if(bt.showColumn(m)==null) {
@@ -32,7 +32,7 @@ public class Connector implements engine_interface.Connect{
 					bt.renameColumn(allColumn_bTreeSet2_source.get(bTreeSet2.getColumn(bt.showColumn(m)))+bt.showColumn(m), m);
 			}
 			m++;
-		}
+		}//把相同列名的重新命名
 		int i=0;
 		int j=0;
 		while(true) {
@@ -62,9 +62,10 @@ public class Connector implements engine_interface.Connect{
 				i=0;
 				break;
 			}
-		}
+		}//新树添加元组
 		return bt;
 	}
+	//返回相同的列的列名arraylist
 	private ArrayList<String> join_column_common(BTreeSet_interface bTreeSet1, BTreeSet_interface bTreeSet2){
 		ArrayList<String> allColumn_bTreeSet1=bTreeSet1.showAllColumn();
 		ArrayList<String> allColumn_bTreeSet2=bTreeSet2.showAllColumn();
@@ -113,7 +114,9 @@ public class Connector implements engine_interface.Connect{
 		}
 		/*BTreeSet_interface bt=this.join_column(bTreeSet1, bTreeSet2);
 		ArrayList<String> column_common=this.join_column_common(bTreeSet1, bTreeSet2);*/
-		int i=0,j=0;
+		int i,j;
+		i=bTreeSet1.first();
+		j=bTreeSet2.first();
 		la0:while(true) {//两层循环遍历两个表的所有元组
 			Node_interface node1=bTreeSet1.findNode(i);
 			if(node1!=null) {//元组不为空，则还没有遍历完
@@ -137,19 +140,19 @@ public class Connector implements engine_interface.Connect{
 							node_value.add(node2.getValues(allColumn_bTreeSet2_delete_common.get(tree2_point)));							
 						}
 						bt.addNode(node_value);//添加元组
-						j=0;//内层指针清零
-						i++;
+						j=bTreeSet2.first();//内层指针清零
+						i=node1.next();
 						continue la0;
 				    }
 					else {//内层元组为空，内层已经遍历完
-						j=0;//内层指针清零
-						i++;
+						j=bTreeSet2.first();//内层指针清零
+						i=node1.next();
 						break la;
 					}
 				}
 			}
 			else {
-				i=0;//外层指针清零
+				i=bTreeSet1.first();//外层指针清零
 				break la0;
 			}
 		}
