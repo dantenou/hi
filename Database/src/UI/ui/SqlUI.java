@@ -79,6 +79,7 @@ public class SqlUI extends JFrame {
 	 * Create the frame.
 	 */
 	public SqlUI() {
+		setResizable(false);
 		
 		
 		
@@ -101,7 +102,7 @@ public class SqlUI extends JFrame {
 		}
         //设置JFrame
 		setTitle("SQL操作界面");
-		setIconImage(Toolkit.getDefaultToolkit().getImage("F:\\美图\\图标\\ti.jpg"));
+		setIconImage(Toolkit.getDefaultToolkit().getImage("src/pic/co.png"));
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 848, 562);
 		contentPane = new JPanel();
@@ -109,8 +110,41 @@ public class SqlUI extends JFrame {
 		contentPane.setBorder(UIManager.getBorder("Menu.border"));
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
-		ImageIcon img =new ImageIcon("F:\\美图\\图标\\ti.jpg");
-		img.setImage(img.getImage().getScaledInstance(20, 20, Image.SCALE_DEFAULT));
+		//设置图片
+		ImageIcon img =new ImageIcon("src/pic/co.png");
+		img.setImage(img.getImage().getScaledInstance(80, 80, Image.SCALE_DEFAULT));
+		
+		JToolBar toolBar = new JToolBar();
+		toolBar.setEnabled(false);
+		toolBar.setBounds(526, 39, 277, 21);
+		contentPane.add(toolBar);
+		
+		//设置按钮图标
+		ImageIcon pen =new ImageIcon("src/pic/penc.png");
+		pen.setImage(pen.getImage().getScaledInstance(15, 20, Image.SCALE_DEFAULT));
+		
+		ImageIcon bt =new ImageIcon("src/pic/bt.png");
+		bt.setImage(bt.getImage().getScaledInstance(20, 20, Image.SCALE_DEFAULT));
+		
+		ImageIcon st =new ImageIcon("src/pic/st.png");
+		st.setImage(st.getImage().getScaledInstance(15, 20, Image.SCALE_DEFAULT));
+		
+		
+		
+		JButton button = new JButton("对象浏览");
+		button.setIcon(bt);
+		toolBar.add(button);
+		toolBar.addSeparator();
+		
+		JButton button_1 = new JButton("数据浏览");
+		button_1.setIcon(st);
+		toolBar.add(button_1);
+		toolBar.addSeparator();
+		
+		JButton btnSql = new JButton("SQL编辑");
+		btnSql.setIcon(pen);
+		toolBar.add(btnSql);
+		
 		
 		JMenuBar menuBar = new JMenuBar();
 		menuBar.setBorder(null);
@@ -120,7 +154,6 @@ public class SqlUI extends JFrame {
 		
 		JMenu mnNewMenu = new JMenu("文件(Z)  ");
 		mnNewMenu.setBackground(Color.MAGENTA);
-//		mnNewMenu.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_Z,KeyEvent.CTRL_MASK));	
 		mnNewMenu.setToolTipText("这是文件");
 		mnNewMenu.getToolkit().getMaximumCursorColors();
 		
@@ -149,7 +182,6 @@ public class SqlUI extends JFrame {
 			}
 		});
 		mntmNewMenuItem_2.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_T,KeyEvent.CTRL_MASK));	
-//		mntmNewMenuItem_2.setIcon(img);
 		mnNewMenu.add(mntmNewMenuItem_2);
 		
 		JMenuItem mntmNewMenuItem_4 = new JMenuItem("另存为（U）");
@@ -256,73 +288,73 @@ public class SqlUI extends JFrame {
 		JMenuItem mntmSql = new JMenuItem("SQL手册（M）");
 		mnNewMenu_7.add(mntmSql);
 		
+		JToolBar toolBar_1 = new JToolBar();
+		toolBar_1.setBounds(556, 0, 229, 33);
+		contentPane.add(toolBar_1);
+		
 		JTextArea textArea = new JTextArea();
+		toolBar_1.add(textArea);
 		textArea.setBackground(Color.WHITE);
 		textArea.setText("请输入");
 		textArea.setBorder(new BevelBorder(BevelBorder.LOWERED, new Color(192, 192, 192), new Color(128, 128, 128), null, null));
-		textArea.setBounds(548, 0, 90, 28);
-		contentPane.add(textArea);
 		
-		JLabel label = new JLabel("搜索");
-		label.setFont(new Font("华文行楷", 100, 25));
-		label.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseClicked(MouseEvent arg0) {
-				label.setBackground(new Color(200,200,200));
+		toolBar_1.addSeparator();
+		
+		JButton button_2 = new JButton("搜索");
+		button_2.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				System.out.println(button_2.isEnabled());
 				
 			}
-			@Override
-			public void mousePressed(MouseEvent e) {
-				System.out.println("555");
-				label.setForeground(new Color((int)(Math.random()*256), (int)(Math.random()*256), (int)(Math.random()*256)));
-				label.setBorder(new LineBorder(new Color((int)(Math.random()*256), (int)(Math.random()*256), (int)(Math.random()*256)), 2, true));
-			}
 		});
-		label.setHorizontalAlignment(SwingConstants.CENTER);
-		label.setBorder(new LineBorder(Color.GRAY, 2, true));
-		label.setBounds(652, 0, 69, 28);
-		contentPane.add(label);
+//		button_2.setFont(new Font("华文行楷", 100, 25));
+		ImageIcon icn =new ImageIcon("src/pic/mir.png");
+		icn.setImage(icn.getImage().getScaledInstance(30, 20, Image.SCALE_DEFAULT));
+		button_2.setIcon(icn);
+		toolBar_1.add(button_2);
 		
 		JSplitPane splitPane = new JSplitPane();
 		splitPane.setBorder(new BevelBorder(BevelBorder.LOWERED, null, null, null, null));
-		splitPane.setBounds(0, 78, 830, 437);
+		splitPane.setBounds(0, 65, 830, 450);
 		contentPane.add(splitPane);
 		
 		JPanel panel = new JPanel();
 		splitPane.setLeftComponent(panel);
 		
+		//设置表（JTree来设置表）
 		JTree tree = new JTree();
 		panel.add(tree);
 		
 		JLayeredPane layeredPane = new JLayeredPane();
+		layeredPane.setBackground(Color.black);
 		splitPane.setRightComponent(layeredPane);
+		
+		//分层页宽度与高度
+		int lw=721;
+		int lh=446;
 		
 		JPanel panel_1 = new JPanel();
 		panel_1.setBackground(Color.YELLOW);
-		panel_1.setBounds(0, 0, 721, 433);
+		panel_1.setBounds(0, 0, lw, lh);
 		layeredPane.add(panel_1);
 		
 		JPanel panel_2 = new JPanel();
 		panel_2.setBackground(Color.GRAY);
-		panel_2.setBounds(0, 0, 721, 433);
+		panel_2.setBounds(0, 0, lw, lh);
 		layeredPane.add(panel_2);
 		
 		JPanel panel_3 = new JPanel();
 		panel_3.setBackground(Color.LIGHT_GRAY);
-		panel_3.setBounds(0, 0, 721, 433);
+		panel_3.setBounds(0, 0, lw, lh);
 		layeredPane.add(panel_3);
 		
 		JSeparator separator = new JSeparator();
 		separator.setBorder(new BevelBorder(BevelBorder.RAISED, Color.LIGHT_GRAY, Color.GRAY, null, null));
 		separator.setBounds(0, 32, 830, 2);
 		contentPane.add(separator);
+		System.out.println(this.getWidth());
 		
-		JSeparator separator_1 = new JSeparator();
-		separator_1.setOrientation(SwingConstants.VERTICAL);
-		separator_1.setBounds(643, 0, 2, 28);
-		contentPane.add(separator_1);
-		
-		JButton button = new JButton("对象浏览");
+		//监听事件实现区域
 		button.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				
@@ -337,18 +369,6 @@ public class SqlUI extends JFrame {
 				
 			}
 		});
-		button.setBounds(262, 41, 113, 34);
-		contentPane.add(button);
-		
-		JButton button_1 = new JButton("数据浏览");
-		button_1.setBounds(389, 41, 100, 34);
-		contentPane.add(button_1);
-		
-		JButton btnSql = new JButton("SQL编辑");
-		btnSql.setBorder(null);
-		btnSql.setBounds(516, 41, 90, 34);
-		contentPane.add(btnSql);
-		System.out.println(this.getWidth());
 		
 		
 	}
