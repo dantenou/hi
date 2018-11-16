@@ -2,6 +2,7 @@ package ui;
 
 import java.awt.BorderLayout;
 import java.awt.EventQueue;
+import java.awt.Image;
 import java.awt.Toolkit;
 
 import javax.swing.JFrame;
@@ -17,6 +18,7 @@ import javax.swing.JTextArea;
 import javax.swing.JButton;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+import javax.swing.ImageIcon;
 
 public class Login extends JFrame {
 
@@ -43,6 +45,7 @@ public class Login extends JFrame {
 	 */
 	public Login() {
 		
+		//和系统界面保持一致
 		try {
 			try {
 				UIManager.setLookAndFeel(
@@ -56,12 +59,13 @@ public class Login extends JFrame {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} 
-		
+		//设置登录界面
 		setResizable(false);
+		this.setTitle("登录界面");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 473, 569);
 		contentPane = new JPanel();
-		setIconImage(Toolkit.getDefaultToolkit().getImage("F:\\美图\\图标\\ti.jpg"));
+		setIconImage(Toolkit.getDefaultToolkit().getImage("src/pic/co.png"));
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
@@ -149,12 +153,24 @@ public class Login extends JFrame {
 				dispose();
 			}
 		});
+		
 		button_1.setBounds(180, 474, 113, 27);
 		contentPane.add(button_1);
 		
 		JButton button_2 = new JButton("取消");
 		button_2.setBounds(317, 474, 113, 27);
 		contentPane.add(button_2);
-	}
+		
+		//定制图片
+		ImageIcon im=new ImageIcon("F:\\美图\\风景\\timg.jpg");
+		im.setImage(im.getImage().getScaledInstance(473, 569, Image.SCALE_DEFAULT));
+		
+		JLabel label_9 = new JLabel("");
+//		label_9.setIcon(im);
 
+		label_9.setBounds(0, 0, 467, 534);
+		contentPane.add(label_9);
+		
+	
+	}
 }
