@@ -33,6 +33,7 @@ import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeCellRenderer;
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreeModel;
+import javax.swing.tree.TreeNode;
 import javax.swing.tree.TreePath;
 import javax.swing.border.LineBorder;
 import java.awt.Rectangle;
@@ -92,7 +93,9 @@ public class SqlUI extends JFrame {
 	private JPanel panel_1;
 	private JTable table;
 	private JTable table_1;
-	private static int ju=-1;
+	private static int ju=-1;//(jundge),判断popupmenu的上层组件
+	private static int ra=-1;//(rowAll),判断整行删除,不然表格改动的监听器会报错。。。。。
+	
 	
 
 	/**
@@ -405,6 +408,7 @@ public class SqlUI extends JFrame {
 		//设置表（JTree来设置表）--------------------------------------------------------	
 		DefaultMutableTreeNode rt=new DefaultMutableTreeNode("localhost");
 		JTree tree = new JTree(rt);
+		
 		//修改节点神器
 		DefaultTreeModel treeModel=(DefaultTreeModel)tree.getModel();
 		
@@ -467,7 +471,7 @@ public class SqlUI extends JFrame {
 			public void mouseReleased(MouseEvent e) {
 				if(e.isPopupTrigger()){
 					popupMenu.show(e.getComponent(), e.getX(), e.getY());
-					ju=1;
+					ju=1;//table唤醒的弹出菜单
 				}
 			}
 		});
@@ -476,10 +480,9 @@ public class SqlUI extends JFrame {
 		String[] title={"名称","类型","记录","大小"};
 		DefaultTableModel dtm =(DefaultTableModel)table.getModel();
 		dtm.setColumnIdentifiers(title);
-		dtm.addRow(new Object[]{"ss", "ss ", "s","s"});
+		
 		//排序器
-		table.setRowSorter(new TableRowSorter<DefaultTableModel>(dtm));
-				
+		table.setRowSorter(new TableRowSorter<DefaultTableModel>(dtm));				
 		JPanel panel_2 = new JPanel();
 		panel_2.setBackground(Color.GRAY);
 		panel_2.setBounds(0, 0, lw, lh);
@@ -509,8 +512,7 @@ public class SqlUI extends JFrame {
 				if(e.isPopupTrigger()){
 					popupMenu.show(e.getComponent(), e.getX(), e.getY());
 					ju=2;
-				}
-				
+				}			
 			}
 		});
 		
@@ -586,13 +588,13 @@ public class SqlUI extends JFrame {
 			}
 		});
 		
-		//JTree的cell修改
+		//JTree的cell修改时间
 		tree.getCellEditor().addCellEditorListener(new CellEditorListener(){
 			@Override
 			public void editingCanceled(ChangeEvent arg0) {
 				// TODO Auto-generated method stub
-				System.out.println("修改失败了，垃圾！");
-				JOptionPane.showMessageDialog(null, "控制台说失败，也要弹窗说失败", "失败界面", JOptionPane.CANCEL_OPTION);
+				System.out.println("修改取消");
+				JOptionPane.showMessageDialog(null, "取消修改", "失败界面", JOptionPane.CANCEL_OPTION);
 			}
 
 			@Override
@@ -601,12 +603,11 @@ public class SqlUI extends JFrame {
 				CellEditor editor = (CellEditor)e.getSource();
 				String nodeAfterEditer = (String)editor.getCellEditorValue();               				 
                 System.out.println("After eidtor:"+nodeAfterEditer ); 
-                JOptionPane.showMessageDialog(null, "修改成功", "成功界面", JOptionPane.WARNING_MESSAGE);
+                JOptionPane.showMessageDialog(null, "修改成功，修改后的节点名称为："+nodeAfterEditer+",请记得点击数据库图标，刷新对象浏览界面", "成功界面", JOptionPane.WARNING_MESSAGE);
+                //打印修改之前的节点的名称
                 DefaultMutableTreeNode node =(DefaultMutableTreeNode)tree.getSelectionPath().getLastPathComponent();
                 System.out.println("Befor editor："+node);
-                
-                String[] c={"武功名称","任务","武学等级","年龄","门派"};
-        		d.addRow(c);
+ 
 			}
 			
 		});
@@ -615,15 +616,20 @@ public class SqlUI extends JFrame {
 		
 		//实现菜单项新建表格方法
 		mnd.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
+			public void actionPerformed(ActionEvent e) {
 				System.out.println("新建数据表");
 				DefaultMutableTreeNode node =new DefaultMutableTreeNode("new node");
 				TreePath p=tree.getSelectionPath();
 				DefaultMutableTreeNode par =(DefaultMutableTreeNode)p.getLastPathComponent();
+				if(par.isLeaf()){
+					System.out.println("不可以给表格添加表格");
+					return;	
+				}
+				System.out.println("本节点看来不是叶节点，可以添加表格");	
 				treeModel.insertNodeInto(node, par, par.getChildCount());
 				//增加一行表格
 				String[] c={"武功名称","任务","武学等级","年龄","门派"};
-        		d.addRow(c);
+        		dtm.addRow(c);
 				
 			}
 		});
@@ -642,9 +648,7 @@ public class SqlUI extends JFrame {
 					if(node.isRoot()){//判断根节点
 						JOptionPane.showMessageDialog(null, "不可删除根节点", "失败界面", JOptionPane.ERROR_MESSAGE);
 					}
-
-					else{
-						
+					else{						
 						treeModel.removeNodeFromParent(node);
 						d.removeRow(table_1.getRowCount()-1);//删除一行
 						JOptionPane.showMessageDialog(null, "你把想删掉的给删了", "成功界面", JOptionPane.INFORMATION_MESSAGE);
@@ -660,13 +664,14 @@ public class SqlUI extends JFrame {
 				System.out.println("新建记录");
 				if(ju==1){
 					System.out.println("table修改ing");
+					System.out.println("对象表不可修改");
 				}
 				else{
 					if(ju==2){
-						System.out.println("table1111修改ing");
+						System.out.println("table_1修改ing");
 					}
 					else{
-						System.out.println("table就不存在");
+						System.out.println("不存在表格");
 					}
 				}
 				
@@ -679,15 +684,14 @@ public class SqlUI extends JFrame {
 				if(ju==1){
 					System.out.println("table删减ing");
 					System.out.println("table中"+(table.getSelectedRow()+1));
-					dtm.removeRow(table.getSelectedRow());
+					System.out.println("对象表不可修改");
 					
 				}
 				else{
 					if(ju==2){
 						System.out.println("table1111删减ing");
 						System.out.println("table_1中删去的是："+(table_1.getSelectedRow()+1));
-						d.removeRow(table_1.getSelectedRow());
-						
+						d.removeRow(table_1.getSelectedRow());						
 					}
 					else{
 						System.out.println("删减，table就不存在");
@@ -701,14 +705,55 @@ public class SqlUI extends JFrame {
 
 			@Override
 			public void tableChanged(TableModelEvent e) {
-				// TODO Auto-generated method stub
-				int col=e.getColumn();
-				int row=e.getFirstRow();
-				System.out.println(table.getValueAt(row, col));
+				// TODO Auto-generated method stub				
+				try{
+					int col=e.getColumn();
+					int row=e.getFirstRow();
+					System.out.println(row+"行，"+col+"列"+"的值变化为"+table.getValueAt(row, col));
+				}catch(Exception a){					
+					System.out.println("table本来会报错。。。。。但是嘿嘿嘿，整行变动");
+				}
 			}
 			
 		});
 		
+		//table_1的修改监听
+		table_1.getModel().addTableModelListener(new TableModelListener(){
+			@Override
+			public void tableChanged(TableModelEvent e) {
+				// TODO Auto-generated method stub							
+				try{
+					int col=e.getColumn();
+					int row=e.getFirstRow();
+					System.out.println(row+"行，"+col+"列"+"的值变化为"+table_1.getValueAt(row, col));
+				}catch(Exception a){					
+					System.out.println("table_1本来会报错。。。。。但是嘿嘿嘿，整行变动");
+				}
+				
+				
+			}	
+		});
+		
+		//点击树，可以显示数据图都有啥表
+		tree.addTreeSelectionListener(new TreeSelectionListener() {
+			public void valueChanged(TreeSelectionEvent arg0) {
+				TreePath p=tree.getSelectionPath();
+				DefaultMutableTreeNode node =(DefaultMutableTreeNode)p.getLastPathComponent();
+				if(node.isRoot()||node.isLeaf()){
+					System.out.println("得点击数据库才行");
+				}
+				else{						
+					dtm.setRowCount(0);//清除之前的表格数据
+					for(int i=0;i<=node.getChildCount()-1;i++){
+						dtm.addRow(new Object[]{node.getChildAt(i),"InnoDB","~5","16KB"});
+						System.out.println();
+					}
+					
+					
+				}
+			}
+		});
+
 		
 		
 	}//-------------SqlUI的设置尽头--------------------
