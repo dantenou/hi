@@ -588,7 +588,7 @@ public class SqlUI extends JFrame {
 			}
 		});
 		
-		//JTree的cell修改时间
+		//JTree的cell修改事件监听
 		tree.getCellEditor().addCellEditorListener(new CellEditorListener(){
 			@Override
 			public void editingCanceled(ChangeEvent arg0) {
